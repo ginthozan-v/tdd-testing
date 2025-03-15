@@ -1,26 +1,14 @@
 import { useState } from 'react';
-
-type Priority = 'p1' | 'p2' | 'p3';
-
-type Task = {
-  id: number;
-  title: string;
-  isCompleted: boolean;
-  priority?: Priority;
-};
+import { Task } from './types';
+import AddTask from './AddTask';
+import TaskList from './TaskList';
+import TaskListItem from './TaskListItem';
+import TaskListHeader from './TaskListHeader';
 
 function App() {
-  const [taskName, setTaskName] = useState('');
-  const [tasks, setTasks] = useState<Task[]>([
-    {
-      id: 1,
-      title: 'Learn React',
-      isCompleted: true,
-      priority: 'p1',
-    },
-  ]);
+  const [tasks, setTasks] = useState<Task[]>([]);
 
-  const onAddTask = () => {
+  const onAddTask = (taskName: string) => {
     setTasks([
       ...tasks,
       {
@@ -29,24 +17,17 @@ function App() {
         isCompleted: false,
       },
     ]);
-    setTaskName('');
   };
 
   return (
     <div>
       <h1>Tasks</h1>
-      <label htmlFor="task-input">Add Task:</label>
-      <input
-        id="task-input"
-        value={taskName}
-        onChange={(e) => setTaskName(e.target.value)}
-      />
-      <button onClick={onAddTask}>Add</button>
-      <ul>
+      <AddTask onAddTask={onAddTask} />
+      <TaskList header={<TaskListHeader count={tasks.length} />}>
         {tasks.map((task) => (
-          <li key={task.id}>{task.title}</li>
+          <TaskListItem key={task.id}>{task.title}</TaskListItem>
         ))}
-      </ul>
+      </TaskList>
     </div>
   );
 }
